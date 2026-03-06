@@ -1,5 +1,3 @@
-{% load dictget %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -128,7 +126,15 @@
                 <div class="question-container">
                     <p>{{ question.text }}</p>
                     <div class="form-group">
-                        {{ forms|dictget:question.id }}
+                        <label for="rating_{{ question.id }}">Rating:</label>
+                        <select name="rating_{{ question.id }}" id="rating_{{ question.id }}" required>
+                            <option value="">Select a rating</option>
+                            <option value="1">1 - Very Poor</option>
+                            <option value="2">2 - Poor</option>
+                            <option value="3">3 - Average</option>
+                            <option value="4">4 - Good</option>
+                            <option value="5">5 - Excellent</option>
+                        </select>
                     </div>
                 </div>
             {% endfor %}

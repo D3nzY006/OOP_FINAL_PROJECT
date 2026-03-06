@@ -37,8 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts',
-    'survey',
+    'app',
 ]
 
 MIDDLEWARE = [
@@ -72,6 +71,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'survey_system.wsgi.application'
 
+import pymysql
+pymysql.install_as_MySQLdb()
+
+# Your existing imports
+from pathlib import Path
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
@@ -84,6 +88,9 @@ DATABASES = {
         'PASSWORD': '02192006M4n4ng',      # your MySQL password
         'HOST': 'localhost',
         'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        }
     }
 }
 
@@ -129,4 +136,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'accounts.CustomUser'
+AUTH_USER_MODEL = 'app.CustomUser'
