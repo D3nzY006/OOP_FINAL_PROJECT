@@ -28,3 +28,15 @@ class Rating(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.question.text} - {self.rating} stars"
+
+
+class OpenResponse(models.Model):
+    user = models.ForeignKey('CustomUser', on_delete=models.CASCADE)
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name='open_responses')
+    response = models.TextField(blank=True)
+
+    class Meta:
+        unique_together = ('user', 'survey')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.survey.title}"

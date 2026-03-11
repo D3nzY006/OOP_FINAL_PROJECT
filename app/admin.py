@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Survey, Question, Rating, CustomUser
+from .models import Survey, Question, Rating, CustomUser, OpenResponse
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
@@ -23,3 +23,10 @@ class RatingAdmin(admin.ModelAdmin):
     list_display = ['user', 'question', 'rating']
     list_filter = ['rating', 'question']
     search_fields = ['user__username', 'question__text']
+
+
+@admin.register(OpenResponse)
+class OpenResponseAdmin(admin.ModelAdmin):
+    list_display = ['user', 'survey']
+    list_filter = ['survey']
+    search_fields = ['user__username', 'survey__title', 'response']

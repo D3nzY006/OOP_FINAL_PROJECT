@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About | SurveyPro</title>
+
+<style>
+body{
+font-family:'Segoe UI', Roboto, Arial;
+background:#f0f2f5;
+margin:0;
+color:#334155;
+}
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 8%;
+background:#ffffff;
+border-bottom:1px solid #e2e8f0;
+}
+
+.logo{
+font-size:24px;
+font-weight:700;
+}
+
+.logo span{
+color:#1b5e20;
+}
+
+.nav-links{
+display:flex;
+gap:16px;
+list-style:none;
+}
+
+.nav-links a{
+display:inline-block;
+padding:10px 28px;
+border-radius:12px;
+background:#1b5e20;
+color:#ffffff;
+text-decoration:none;
+font-weight:700;
+letter-spacing:0.4px;
+transition:background-color 0.2s ease;
+}
+
+.nav-links a:hover{
+background:#1b5e20;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+padding:80px 8%;
+text-align:center;
+}
+
+h1{
+color:#1b5e20;
+margin-bottom:20px;
+}
+
+.card{
+background:white;
+padding:40px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,0.05);
+}
+
+footer{
+text-align:center;
+padding:20px;
+color:#64748b;
+}
+</style>
+</head>
+
+<body>
+
+<nav class="navbar">
+<div class="logo">SURVEY<span>PRO</span></div>
+
+<ul class="nav-links">
+<li><a href="{% url 'login' %}">Back</a></li>
+</ul>
+</nav>
+
+<div class="container">
+
+<h1>About Our System</h1>
+
+<div class="card">
+<p>
+The <b>Online Survey System</b> is designed to collect feedback from users
+in an organized and efficient way. Our goal is to make feedback collection
+simple, accessible, and useful for improving services and decision-making.
+</p>
+
+<p>
+Through this system, users can easily participate in surveys and share their
+opinions, helping organizations understand experiences and enhance quality.
+</p>
+</div>
+
+</div>
+
+<footer>
+&copy; 2026 SurveyPro | Online Survey System
+</footer>
+
+</body>
+</html>

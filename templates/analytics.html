@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Analytics</title>
+    <style>
+        :root {
+            --bg: #07142a;
+            --panel: #10233f;
+            --panel-soft: #173255;
+            --text: #e8f0ff;
+            --muted: #97adc9;
+            --accent: #42c4ff;
+            --accent-2: #1b5e20;
+            --border: rgba(161, 192, 233, 0.22);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 15% 20%, rgba(66, 196, 255, 0.2), transparent 35%),
+                radial-gradient(circle at 85% 10%, rgba(27, 94, 32, 0.2), transparent 30%),
+                linear-gradient(160deg, #051024 0%, #0c1d37 45%, #10233f 100%);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            letter-spacing: 0.6px;
+        }
+
+        .topbar a {
+            text-decoration: none;
+            color: #032139;
+            background: linear-gradient(120deg, var(--accent), #9be8ff);
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        .grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        .stats {
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            margin-bottom: 14px;
+        }
+
+        .panel {
+            background: linear-gradient(180deg, rgba(19, 45, 77, 0.92) 0%, rgba(13, 34, 61, 0.92) 100%);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.28);
+        }
+
+        .stat-title {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            margin: 6px 0 0;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .layout {
+            grid-template-columns: 1.2fr 1fr;
+        }
+
+        h2 {
+            margin: 0 0 14px;
+            font-size: 1rem;
+            color: #d6e6ff;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+        }
+
+        .bar-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .bar-item {
+            display: grid;
+            grid-template-columns: 110px 1fr 70px;
+            gap: 10px;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .bar-track {
+            width: 100%;
+            background: #0b1b33;
+            border-radius: 999px;
+            overflow: hidden;
+            border: 1px solid rgba(161, 192, 233, 0.2);
+            min-height: 12px;
+        }
+
+        .bar-fill {
+            height: 100%;
+            min-height: 12px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #38bdf8 0%, #1b5e20 100%);
+        }
+
+        .bar-value {
+            color: #d8e5f8;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .roles {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .role-box {
+            background: var(--panel-soft);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .role-label {
+            font-size: 0.8rem;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .role-value {
+            font-size: 1.3rem;
+            margin-top: 4px;
+            font-weight: 800;
+        }
+
+        .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .chip {
+            border-radius: 999px;
+            border: 1px solid rgba(66, 196, 255, 0.45);
+            background: rgba(66, 196, 255, 0.14);
+            padding: 6px 12px;
+            color: #ddf6ff;
+            font-size: 0.82rem;
+        }
+
+        .empty {
+            color: var(--muted);
+            margin: 0;
+        }
+
+        @media (max-width: 900px) {
+            body {
+                padding: 14px;
+            }
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .bar-item {
+                grid-template-columns: 90px 1fr 64px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="topbar">
+            <h1>Survey Analytics Dashboard</h1>
+            <a href="{% url 'login' %}">Back to Login</a>
+        </div>
+
+        <section class="grid stats">
+            <article class="panel">
+                <p class="stat-title">Total Responses</p>
+                <p class="stat-value">{{ total_responses }}</p>
+            </article>
+            <article class="panel">
+                <p class="stat-title">Total Respondents</p>
+                <p class="stat-value">{{ total_respondents }}</p>
+            </article>
+            <article class="panel">
+                <p class="stat-title">Average Rating</p>
+                <p class="stat-value">{{ average_rating|floatformat:2 }} / 5</p>
+            </article>
+            <article class="panel">
+                <p class="stat-title">Completion Rate</p>
+                <p class="stat-value">{{ completion_rate|floatformat:1 }}%</p>
+            </article>
+            <article class="panel">
+                <p class="stat-title">Satisfaction</p>
+                <p class="stat-value">{{ satisfaction_rate|floatformat:1 }}%</p>
+            </article>
+        </section>
+
+        <section class="grid layout">
+            <article class="panel">
+                <h2>Rating Breakdown</h2>
+                <div class="bar-list">
+                    {% for row in rating_breakdown %}
+                        <div class="bar-item">
+                            <span>{{ row.label }}</span>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width: {{ row.percent|floatformat:2 }}%;"></div>
+                            </div>
+                            <span class="bar-value">{{ row.count }} ({{ row.percent|floatformat:1 }}%)</span>
+                        </div>
+                    {% empty %}
+                        <p class="empty">No rating data yet.</p>
+                    {% endfor %}
+                </div>
+            </article>
+
+            <article class="panel">
+                <h2>Respondents By Role</h2>
+                <div class="grid roles">
+                    <div class="role-box">
+                        <div class="role-label">Students</div>
+                        <div class="role-value">{{ role_counts.student }}</div>
+                    </div>
+                    <div class="role-box">
+                        <div class="role-label">Instructors</div>
+                        <div class="role-value">{{ role_counts.instructor }}</div>
+                    </div>
+                    <div class="role-box">
+                        <div class="role-label">Staffs</div>
+                        <div class="role-value">{{ role_counts.staff }}</div>
+                    </div>
+                    <div class="role-box">
+                        <div class="role-label">Visitors</div>
+                        <div class="role-value">{{ role_counts.visitor }}</div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="panel">
+                <h2>Responses By Survey</h2>
+                <div class="bar-list">
+                    {% for row in responses_by_survey %}
+                        <div class="bar-item">
+                            <span>{{ row.survey__title|truncatechars:14 }}</span>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width: {{ row.width_percent|floatformat:2 }}%;"></div>
+                            </div>
+                            <span class="bar-value">{{ row.count }}</span>
+                        </div>
+                    {% empty %}
+                        <p class="empty">No completed survey submissions yet.</p>
+                    {% endfor %}
+                </div>
+            </article>
+
+            <article class="panel">
+                <h2>Average Rating By Survey</h2>
+                <div class="bar-list">
+                    {% for row in avg_rating_by_survey %}
+                        <div class="bar-item">
+                            <span>{{ row.question__survey__title|truncatechars:14 }}</span>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width: {{ row.width_percent|floatformat:2 }}%;"></div>
+                            </div>
+                            <span class="bar-value">{{ row.avg|floatformat:2 }}/5</span>
+                        </div>
+                    {% empty %}
+                        <p class="empty">No average rating data yet.</p>
+                    {% endfor %}
+                </div>
+            </article>
+
+            <article class="panel" style="grid-column: 1 / -1;">
+                <h2>Top Feedback Keywords</h2>
+                <div class="keywords">
+                    {% for row in keyword_rows %}
+                        <span class="chip" style="font-size: calc(0.74rem + {{ row.size|floatformat:2 }} * 0.006rem);">
+                            {{ row.keyword }} ({{ row.count }})
+                        </span>
+                    {% empty %}
+                        <p class="empty">No open-ended responses yet.</p>
+                    {% endfor %}
+                </div>
+            </article>
+        </section>
+    </div>
+</body>
+</html>

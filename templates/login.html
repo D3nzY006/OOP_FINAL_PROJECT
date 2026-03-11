@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>SurveyPro | Login</title>
   <style>
     /* RESET & BASE STYLES */
@@ -35,20 +37,36 @@
       color: #0f172a;
     }
 
+.hero-logo{
+  height:200px;
+  margin-left: 85px;
+  margin-bottom:25px;
+}
+
     .logo span {
-      color: #10b981;
+      color: #1b5e20;
     }
 
     .nav-links {
       display: flex;
-      gap: 30px;
+      gap: 14px;
       list-style: none;
     }
 
     .nav-links a {
+      display: inline-block;
+      padding: 10px 18px;
+      border-radius: 8px;
+      background: #1b5e20;
       text-decoration: none;
-      color: #64748b;
-      font-weight: 500;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 15px;
+      transition: background-color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      background: #1b5e20;
     }
 
     /* HERO SECTION */
@@ -68,7 +86,7 @@
 
     .hero-text h1 {
       font-size: 3rem;
-      color: #10b981; /* Emerald green from your first request */
+      color: #1b5e20 ; /* Emerald green from your first request */
       margin-bottom: 20px;
     }
 
@@ -78,6 +96,22 @@
       margin-bottom: 30px;
     }
 
+    .learn-more-btn {
+      display: inline-block;
+      padding: 12px 30px;
+      background: #1b5e20;
+      color: #ffffff;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      transition: background-color 0.2s ease;
+    }
+
+    .learn-more-btn:hover {
+      background: #1b5e20;
+    }
+
     /* THE LOGIN CARD (Directly from your screenshot) */
     .login-card {
       background-color: #ffffff;
@@ -85,7 +119,7 @@
       max-width: 400px;
       padding: 40px;
       border-radius: 24px; /* Soft rounded corners */
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 10px 25px rgba(27, 94, 32, 0.2);
       text-align: center;
     }
 
@@ -117,11 +151,15 @@
       font-size: 16px;
     }
 
+    .password-field {
+      position: relative;
+    }
+
     /* THE LOGIN BUTTON */
     .login-btn {
       width: 100%;
       padding: 14px;
-      background-color: #5cb85c; /* Specific green from your image */
+      background-color: #1b5e20; /* Specific green from your image */
       color: white;
       border: none;
       border-radius: 30px; /* Pill shape from your image */
@@ -133,14 +171,14 @@
     }
 
     .login-btn:hover {
-      background-color: #4cae4c;
+      background-color: #1b5e20;
     }
 
     /* REGISTER LINK */
     .register-text {
       margin-top: 25px;
       font-size: 15px;
-      color: #5cb85c;
+      color: #1b5e20;
     }
 
     .register-text span {
@@ -165,20 +203,20 @@
   <nav class="navbar">
     <div class="logo">SURVEY<span>PRO</span></div>
     <ul class="nav-links">
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Analytics</a></li>
-      <li><a href="#">QR-code</a></li>
+      <li><a href="{% url 'my_account' %}">Account</a></li>
+      <li><a href="{% url 'analytics_dashboard' %}">Analytics</a></li>
+      <li><a href="{% url 'qr_code' %}">QR-code</a></li>
     </ul>
     <div style="width: 100px;"></div> </nav>
 
   <div class="container">
     
     <div class="hero-text">
-      <h1>ONLINE SURVEY</h1>
+  <img src="{% static 'logo.art.png' %}" alt="Survey Logo" class="hero-logo">
+  <h1>ONLINE SURVEY</h1>
+
       <p>Welcome to our feedback survey platform. Share your thoughts and help us improve. Your input is valuable in shaping better services.</p>
-      <button style="padding: 12px 24px; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
-        LEARN MORE
-      </button>
+      <a href="{% url 'learn_more' %}" class="learn-more-btn">LEARN MORE</a>
     </div>
 
     <div class="login-card">
@@ -191,7 +229,9 @@
         </div>
         <div class="form-group">
           <label>Password:</label>
-          <input type="password" name="password" placeholder="Password">
+          <div class="password-field">
+            <input id="password" type="password" name="password" placeholder="Password">
+          </div>
         </div>
         <button type="submit" class="login-btn">Login</button>
       </form>
@@ -202,6 +242,10 @@
     </div>
 
   </div>
+
+  <script>
+    // Password toggle functionality removed - no toggle button present
+  </script>
 
 </body>
 </html>

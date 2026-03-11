@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Online Survey System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f2;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+            margin: 0;
+        }
+
+        .profile-card {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border: 1px solid #e1e9e3;
+        }
+
+        .profile-header {
+            background: #1b5e20;
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .avatar {
+            width: 90px;
+            height: 90px;
+            background: white;
+            color: #1b5e20;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0 auto 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 12px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.4);
+            letter-spacing: 1px;
+        }
+
+        .profile-body {
+            padding: 30px;
+        }
+
+        .info-group {
+            margin-bottom: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 0;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            font-size: 13px;
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+
+        .value {
+            font-size: 15px;
+            color: #2c3e50;
+            font-weight: 500;
+            text-align: right;
+            word-break: break-word;
+        }
+
+        .password-mask {
+            letter-spacing: 3px;
+            color: #bdc3c7;
+        }
+
+        .edit-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin-top: 25px;
+            background: #1b5e20;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(27, 94, 32, 0.2);
+        }
+
+        .edit-btn:hover {
+            background: #1b5e20;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(27, 94, 32, 0.3);
+        }
+
+        @media (max-width: 560px) {
+            body {
+              
+                padding: 16px;
+            }
+
+            .profile-header {
+                padding: 28px 20px;
+            }
+
+            .profile-body {
+                padding: 22px;
+            }
+
+            .info-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+
+            .value {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="profile-card">
+    {% if account %}
+    <div class="profile-header">
+        <div class="avatar">{{ account.initials|default:"U" }}</div>
+        <h2 style="margin:0; font-size: 24px;">{{ account.display_name }}</h2>
+        <p style="margin:5px 0 0; opacity: 0.85; font-weight: 300;">@{{ account.username }}</p>
+        <span class="role-badge">{{ account.role }}</span>
+    </div>
+
+    <div class="profile-body">
+        <div class="info-group">
+            <div class="info-row">
+                <span class="label">First Name</span>
+                <span class="value">{{ account.first_name|default:"-" }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Last Name</span>
+                <span class="value">{{ account.last_name|default:"-" }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Username</span>
+                <span class="value">{{ account.username }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Email Address</span>
+                <span class="value">{{ account.email|default:"-" }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Password</span>
+                <span class="value password-mask">********</span>
+            </div>
+            <div class="info-row">
+                <span class="label">System Role</span>
+                <span class="value" style="color: #1b5e20; font-weight: 700;">{{ account.role }}</span>
+            </div>
+        </div>
+
+        <a class="edit-btn" href="{% url 'survey_list' %}">Edit Account Settings</a>
+    </div>
+    {% else %}
+    <div class="profile-header">
+        <div class="avatar">U</div>
+        <h2 style="margin:0; font-size: 24px;">My Account</h2>
+        <p style="margin:5px 0 0; opacity: 0.85; font-weight: 300;">No active user session</p>
+    </div>
+    <div class="profile-body">
+        <div class="info-group">
+            <div class="info-row">
+                <span class="label">Info</span>
+                <span class="value">Please login or register first.</span>
+            </div>
+        </div>
+        <a class="edit-btn" href="{% url 'login' %}">Go to Login</a>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

@@ -7,78 +7,148 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #334155;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
-            background-image: url('your-background-image.jpg'); /* Change background image*/
-            background-size: cover;
+            padding: 24px 16px;
+            line-height: 1.6;
         }
 
         .glass-container {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            box-shadow: 0 6px 40px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(7px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 30px;
-            width: 400px; /* Dagdagan ang lapad para mas maluwag */
+            background-color: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            padding: 36px;
+            width: 100%;
+            max-width: 660px;
+            max-height: calc(100vh - 48px);
+            overflow-y: auto;
             text-align: center;
         }
 
         .glass-container h2 {
-            margin-bottom: 25px;
+            margin-bottom: 28px;
             color: #333;
+            font-size: 2rem;
             font-weight: 500;
         }
 
-        .glass-container input {
+        .glass-container input,
+        .glass-container select {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
+            padding: 14px;
+            margin: 0;
             box-sizing: border-box;
             border: none;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.4);
-            color: #333;
+            border-radius: 12px;
+            background-color: #e8f0fe;
+            color: #334155;
+            font-size: 16px;
             outline: none;
         }
 
-        .glass-container button {
-            background-color: #4CAF50; /* Green */
+        .glass-container button[type="submit"] {
+            background-color: #1b5e20;
             color: white;
             padding: 14px 25px;
             border: none;
             border-radius: 30px;
             cursor: pointer;
             width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 10px;
             transition: background-color 0.3s ease;
         }
 
-        .glass-container button:hover {
-            background-color: #45a049;
+        .glass-container button[type="submit"]:hover {
+            background-color: #1b5e20;
         }
 
         .glass-container a {
             display: block;
-            margin-top: 15px;
-            color: #4CAF50; /* Green */
+            margin-top: 20px;
+            color: #1b5e20;
             text-decoration: none;
+            font-size: 15px;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
             text-align: left;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-            color: #555;
+            margin-bottom: 8px;
+            color: #444;
+            font-size: 16px;
             font-weight: 500;
+        }
+
+
+        .password-field {
+            position: relative;
+        }
+
+        .password-field input {
+            padding-right: 44px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .password-toggle svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .password-toggle .icon-eye-off {
+            display: none;
+        }
+
+        .password-toggle.is-visible .icon-eye {
+            display: none;
+        }
+
+        .password-toggle.is-visible .icon-eye-off {
+            display: block;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            .glass-container {
+                padding: 24px;
+                border-radius: 20px;
+                max-height: calc(100vh - 24px);
+            }
         }
     </style>
 </head>
@@ -89,8 +159,14 @@
             {% csrf_token %}
             {% for field in form %}
                 <div class="form-group">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {{ field }}
+                    <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                    {% if field.field.widget.input_type == 'password' %}
+                        <div class="password-field">
+                            {{ field }}
+                        </div>
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
                     {% if field.errors %}
                         <div class="error-message" style="color: red;">
                             {{ field.errors }}
@@ -102,5 +178,22 @@
         </form>
         <a href="{% url 'login' %}">Already have an account? <span style="color: #444;">Login</span></a>
     </div>
+
+    <script>
+        document.querySelectorAll('.password-field').forEach(function (wrapper) {
+            const input = wrapper.querySelector('input');
+            const toggle = wrapper.querySelector('.password-toggle');
+
+            if (!input || !toggle) return;
+
+            toggle.addEventListener('click', function () {
+                const isHidden = input.type === 'password';
+                input.type = isHidden ? 'text' : 'password';
+                toggle.classList.toggle('is-visible', isHidden);
+                toggle.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+            });
+        });
+    </script>
+
 </body>
 </html>

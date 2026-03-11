@@ -7,13 +7,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #2e7d32;
+            --primary: #1b5e20;
             --primary-dark: #1b5e20;
             --bg-page: #f9f9f9;
             --bg-card: #ffffff;
             --text-main: #1e293b;
             --text-muted: #64748b;
-            --accent-light: #e8f5e9;
+            --accent-light: #1b5e20;
             --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
 
@@ -63,6 +63,12 @@
             padding: 8px 14px;
             border-radius: 6px;
             transition: background 0.3s ease;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
 
         header a:hover {
@@ -211,7 +217,9 @@
     <div class="container">
         <header>
             <h1>Welcome, {{ user.username }}!</h1>
-            <a href="{% url 'logout' %}">Logout</a>
+            <div class="header-actions">
+                <a href="{% url 'logout' %}">Logout</a>
+            </div>
         </header>
 
         <main>

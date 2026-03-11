@@ -1,11 +1,32 @@
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import Group
 from django import forms
 from .models import CustomUser, Rating
 
+ROLE_CHOICES = [
+    ("student", "Student"),
+    ("instructor", "Instructor"),
+    ("staff", "Staff"),
+    ("visitor", "Visitor"),
+]
+
+
 class CustomUserCreationForm(UserCreationForm):
+    role = forms.ChoiceField(choices=ROLE_CHOICES, required=True)
+
     class Meta:
         model = CustomUser
-        fields = ('username', 'email')
+        fields = ('first_name', 'last_name', 'username', 'email')
+
+    def save(self, commit=True):
+        user = super().save(commit=commit)
+        role = self.cleaned_data.get('role')
+
+        if commit and role:
+            group, _ = Group.objects.get_or_create(name=role)
+            user.groups.add(group)
+
+        return user
 
 class RatingForm(forms.ModelForm):
     rating = forms.ChoiceField(

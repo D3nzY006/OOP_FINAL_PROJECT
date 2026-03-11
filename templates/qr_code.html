@@ -1,0 +1,217 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan Survey QR - Online Survey System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f2;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .top-nav {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: white;
+            color: #1b5e20;
+            border: 2px solid #1b5e20;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #1b5e20;
+            color: white;
+        }
+
+        .scan-container {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .scanner-window {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            background: #f9f9f9;
+            border: 2px solid #e1e9e3;
+            border-radius: 15px;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background: #1b5e20;
+            box-shadow: 0 0 15px #1b5e20;
+            top: 0;
+            animation: scanMove 2.5s infinite ease-in-out;
+        }
+
+        @keyframes scanMove {
+            0% { top: 0; }
+            50% { top: 100%; }
+            100% { top: 0; }
+        }
+
+        .corner {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 4px solid #1b5e20;
+        }
+
+        .top-left {
+            top: 10px;
+            left: 10px;
+            border-right: none;
+            border-bottom: none;
+            border-top-left-radius: 8px;
+        }
+
+        .top-right {
+            top: 10px;
+            right: 10px;
+            border-left: none;
+            border-bottom: none;
+            border-top-right-radius: 8px;
+        }
+
+        .bottom-left {
+            bottom: 10px;
+            left: 10px;
+            border-right: none;
+            border-top: none;
+            border-bottom-left-radius: 8px;
+        }
+
+        .bottom-right {
+            bottom: 10px;
+            right: 10px;
+            border-left: none;
+            border-top: none;
+            border-bottom-right-radius: 8px;
+        }
+
+        .qr-preview {
+            width: 120px;
+            height: 120px;
+            opacity: 0.18;
+            z-index: 1;
+        }
+
+        .qr-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            background: #1b5e20;
+            color: #1b5e20;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid #1b5e20;
+        }
+
+        .dot {
+            height: 8px;
+            width: 8px;
+            background-color: #1b5e20;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        .upload-btn {
+            margin-top: 25px;
+            background: none;
+            border: none;
+            color: #1b5e20;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-nav">
+        <a href="{% url 'login' %}" class="back-btn">&larr; Back to Home</a>
+    </div>
+
+    <div class="scan-container">
+        <h2>Scan QR Code</h2>
+        <p>Align the survey QR code within the frame to start answering.</p>
+
+        <div class="scanner-window">
+            <div class="scan-line"></div>
+            <div class="corner top-left"></div>
+            <div class="corner top-right"></div>
+            <div class="corner bottom-left"></div>
+            <div class="corner bottom-right"></div>
+            <a class="qr-link" href="{{ qr_target_url }}" target="_blank" rel="noopener noreferrer">
+                <img class="qr-preview" src="{% static 'qr_code.png' %}" alt="Survey QR Code">
+            </a>
+        </div>
+
+        <div class="status-badge">
+            <span class="dot"></span>
+            Ready to Scan...
+        </div>
+
+        <br>
+        <button class="upload-btn" type="button">Or upload from gallery</button>
+    </div>
+</body>
+</html>
