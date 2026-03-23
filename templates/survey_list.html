@@ -13,7 +13,7 @@
             --bg-card: #ffffff;
             --text-main: #1e293b;
             --text-muted: #64748b;
-            --accent-light: #1b5e20;
+            --accent-light: #ecf0ec;
             --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
 
@@ -233,7 +233,9 @@
                     {% for survey in surveys %}
                         <div class="survey-card">
                             <div>
-                                <div class="card-icon">📋</div>
+                                <div class="card-icon">
+                                    <span style="font-size: {{ survey.get_icon.1 }}">{{ survey.get_icon.0 }}</span>
+                                </div>
                                 <h3>{{ survey.title }}</h3>
                                 <p>{{ survey.description|default:"No description available." }}</p>
                             </div>

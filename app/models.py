@@ -11,6 +11,20 @@ class Survey(models.Model):
     def __str__(self):
         return self.title
 
+    def get_icon(self):
+        title_lower = self.title.lower() if self.title else ''
+        if 'student' in title_lower:
+            return ('🎓', '36px')
+        elif 'instructor' in title_lower:
+            return ('🏫', '36px')
+        elif 'staff' in title_lower:
+            return ('💼', '36px')
+        elif 'visitor' in title_lower:
+            return ('👥', '36px')
+        elif 'general' in title_lower:
+            return ('🌍', '36px')
+        return ('📋', '36px')
+
 class Question(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name='questions')
     text = models.CharField(max_length=300)

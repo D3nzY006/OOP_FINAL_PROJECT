@@ -3,227 +3,527 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Take Survey</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
+    <title>Take Survey - {{ survey.title }}</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap">
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #eef2f5;
-            color: #334155;
-            margin: 0;
-            padding: 24px 16px;
+        /* Root color variables */
+        :root {
+            --primary: #1b5e20;
+            --primary-hover: #145214;
+            --primary-light: #e8f0fe;
+            --bg: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #475569;
+            --border: rgba(27, 94, 32, 0.2);
+            --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+            --shadow-hover: 0 20px 40px rgba(15, 23, 42, 0.12);
         }
 
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Navbar styling */
+        .navbar {
+            background: var(--card-bg);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .navbar-brand span {
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .navbar-back {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .navbar-back:hover {
+            color: var(--primary);
+        }
+
+        /* Main container */
         .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 14px;
-            padding: 30px;
-            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
-            border: 1px solid #dbe5ec;
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px 40px;
+        }
+
+        /* Survey card */
+        .survey-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(27, 94, 32, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .survey-card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Survey header */
+        .survey-header {
+            text-align: center;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .survey-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            display: block;
         }
 
         h2 {
-            color: #1f2937;
-            margin-bottom: 10px;
-            font-weight: 500;
+            color: var(--text-main);
+            margin: 0 0 12px;
+            font-size: 28px;
+            font-weight: 600;
         }
 
         .intro {
-            color: #475569;
-            margin-bottom: 18px;
-            line-height: 1.5;
+            color: var(--text-muted);
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .intro-highlight {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 12px;
+            font-weight: 500;
+        }
+
+        /* Rating section */
+        .rating-section {
+            margin-bottom: 32px;
+        }
+
+        .section-label {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 2px;
         }
 
         .table-wrapper {
             overflow-x: auto;
-            border: 1px solid #dbe5ec;
-            border-radius: 10px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fafafa;
         }
 
         .rating-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 860px;
+            min-width: 600px;
         }
 
         .rating-table thead th {
-            background: #e8eff4;
-            color: #3f4f5f;
-            font-weight: 500;
-            font-size: 15px;
-            padding: 12px 10px;
-            border-bottom: 1px solid #d5e0e8;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 14px;
+            padding: 16px 12px;
+            border-bottom: 2px solid var(--border);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .rating-table thead th:first-child {
-            width: 45%;
             text-align: left;
+            width: 40%;
+        }
+
+        .rating-table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .rating-table tbody tr:hover {
+            background-color: #f8fafc;
         }
 
         .rating-table tbody th {
             text-align: left;
             font-weight: 500;
-            color: #334155;
-            padding: 12px 10px;
-            border-bottom: 1px solid #e2e8f0;
+            color: var(--text-main);
+            padding: 16px 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 15px;
         }
 
         .rating-table td {
             text-align: center;
-            padding: 12px 8px;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 8px;
+            border-bottom: 1px solid var(--border);
         }
 
-        .rating-table input[type="radio"] {
-            width: 22px;
-            height: 22px;
+        /* Custom radio buttons */
+        .rating-option {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rating-option input[type="radio"] {
+            width: 24px;
+            height: 24px;
             margin: 0;
             appearance: none;
-            border: 2px solid #8aa1b2;
+            border: 2px solid #cbd5e1;
             border-radius: 50%;
             background: #ffffff;
             cursor: pointer;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            transition: all 0.2s ease;
+            position: relative;
         }
 
-        .rating-table input[type="radio"]:checked {
-            border: 7px solid #4d7ea8;
+        .rating-option input[type="radio"]:hover {
+            border-color: var(--primary);
+            transform: scale(1.1);
         }
 
-        .rating-table input[type="radio"]:focus-visible {
+        .rating-option input[type="radio"]:checked {
+            border: 8px solid var(--primary);
+            background: var(--primary);
+        }
+
+        .rating-option input[type="radio"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .rating-option input[type="radio"]:focus-visible {
             outline: none;
-            box-shadow: 0 0 0 3px rgba(77, 126, 168, 0.25);
+            box-shadow: 0 0 0 4px rgba(27, 94, 32, 0.2);
         }
 
+        /* Open-ended section */
         .open-ended {
-            margin-top: 22px;
+            margin-top: 32px;
+            background: var(--primary-light);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
         }
 
         .open-ended label {
             display: block;
+            font-weight: 600;
+            color: var(--primary);
             margin-bottom: 8px;
-            color: #1f2937;
-            font-weight: 500;
+            font-size: 16px;
         }
 
         .open-ended p {
-            margin: 0 0 8px;
-            color: #64748b;
+            margin: 0 0 12px;
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.5;
         }
 
         .open-ended textarea {
             width: 100%;
-            min-height: 140px;
-            padding: 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
+            min-height: 150px;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
             font-size: 15px;
             font-family: inherit;
             resize: vertical;
             box-sizing: border-box;
-            color: #1f2937;
+            color: var(--text-main);
+            background: white;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
+        .open-ended textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(27, 94, 32, 0.15);
+        }
+
+        .open-ended textarea::placeholder {
+            color: #94a3b8;
+        }
+
+        /* Form actions */
         .form-actions {
             text-align: center;
-            margin-top: 24px;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
         }
 
-        .form-actions button {
-            background-color: #3b8f6f;
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, #0d3d12 100%);
             color: white;
-            padding: 14px 30px;
+            padding: 16px 48px;
             border: none;
             border-radius: 30px;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            transition: background-color 0.3s ease;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(27, 94, 32, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
             width: 100%;
-            max-width: 300px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
         }
 
-        .form-actions button:hover {
-            background-color: #31775d;
+        .submit-btn:hover {
+            background: linear-gradient(135deg, var(--primary-hover) 0%, #0a2e0d 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(27, 94, 32, 0.4);
         }
 
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Back link */
         .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            color: #3b8f6f;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 24px;
+            color: var(--text-muted);
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s ease;
+            transition: color 0.2s ease;
+            padding: 12px 24px;
+            border-radius: 8px;
+            background: #f1f5f9;
         }
 
         .back-link:hover {
-            color: #31775d;
+            color: var(--primary);
+            background: var(--primary-light);
         }
 
-        @media (max-width: 700px) {
-            .container {
-                padding: 20px;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 12px 20px;
             }
 
-            body {
-                padding: 16px 10px;
+            .container {
+                margin: 20px auto;
+                padding: 0 12px 30px;
             }
+
+            .survey-card {
+                padding: 24px 20px;
+                border-radius: 12px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            .rating-table thead th,
+            .rating-table tbody th,
+            .rating-table td {
+                padding: 12px 8px;
+                font-size: 14px;
+            }
+
+            .rating-option input[type="radio"] {
+                width: 20px;
+                height: 20px;
+            }
+
+            .rating-option input[type="radio"]:checked {
+                border-width: 6px;
+            }
+
+            .submit-btn {
+                width: 100%;
+                padding: 16px 32px;
+            }
+        }
+
+        /* Animation for form appearance */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .survey-card {
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .rating-section {
+            animation: fadeInUp 0.5s ease-out 0.1s both;
+        }
+
+        .open-ended {
+            animation: fadeInUp 0.5s ease-out 0.2s both;
         }
     </style>
 </head>
 <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="{% url 'survey_list' %}" class="navbar-brand">
+            SURVEY<span>PRO</span>
+        </a>
+        <a href="{% url 'survey_list' %}" class="navbar-back">
+            ← Back to Surveys
+        </a>
+    </nav>
+
     <div class="container">
-        <h2>{{ survey.title }}</h2>
-        <p class="intro">{{ survey.description }}</p>
-        <p class="intro">Rate each item based on how effective it is.</p>
+        <div class="survey-card">
+            <!-- Survey Header -->
+            <div class="survey-header">
+                <span class="survey-icon">{{ survey.get_icon.0 }}</span>
+                <h2>{{ survey.title }}</h2>
+                <p class="intro">{{ survey.description }}</p>
+                <span class="intro-highlight">Rate each item based on how effective it is</span>
+            </div>
 
-        <form method="post">
-            {% csrf_token %}
-            <div class="table-wrapper">
-                <table class="rating-table">
-                    <thead>
-                        <tr>
-                            <th>Question</th>
-                            {% for value, label in rating_choices %}
-                                <th>{{ label }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for question in questions %}
-                            <tr>
-                                <th scope="row">{{ forloop.counter }}. {{ question.text }}</th>
-                                {% for value, label in rating_choices %}
-                                    <td>
-                                        <input
-                                            type="radio"
-                                            name="rating_{{ question.id }}"
-                                            id="q{{ question.id }}_{{ value }}"
-                                            value="{{ value }}"
-                                            aria-label="{{ question.text }} - {{ label }}"
-                                            required
-                                        >
-                                    </td>
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- Rating Questions -->
+                <div class="rating-section">
+                    <div class="section-label">Rating Questions</div>
+                    <div class="table-wrapper">
+                        <table class="rating-table">
+                            <thead>
+                                <tr>
+                                    <th>Question</th>
+                                    {% for value, label in rating_choices %}
+                                        <th>{{ label }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for question in questions %}
+                                    <tr>
+                                        <th scope="row">{{ forloop.counter }}. {{ question.text }}</th>
+                                        {% for value, label in rating_choices %}
+                                            <td>
+                                                <label class="rating-option">
+                                                    <input
+                                                        type="radio"
+                                                        name="rating_{{ question.id }}"
+                                                        id="q{{ question.id }}_{{ value }}"
+                                                        value="{{ value }}"
+                                                        aria-label="{{ question.text }} - {{ label }}"
+                                                        required
+                                                    >
+                                                </label>
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
                                 {% endfor %}
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-            <div class="open-ended">
-                <label for="open_response">Open-ended question:</label>
-                <p>What suggestions or comments do you have? Please answer in full sentence(s).</p>
-                <textarea id="open_response" name="open_response" placeholder="Type your answer here...">{{ open_response }}</textarea>
-            </div>
+                <!-- Open-ended Question -->
+                <div class="open-ended">
+                    <label for="open_response">📝 Open-ended Question</label>
+                    <p>What suggestions or comments do you have? Please answer in full sentence(s).</p>
+                    <textarea 
+                        id="open_response" 
+                        name="open_response" 
+                        placeholder="Type your answer here... Your feedback is valuable to us."
+                    >{{ open_response }}</textarea>
+                </div>
 
-            <div class="form-actions">
-                <button type="submit">Submit</button>
+                <!-- Submit Button -->
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">Submit Survey ✓</button>
+                </div>
+            </form>
+            
+            <div style="text-align: center;">
+                <a href="{% url 'survey_list' %}" class="back-link">← Back to Surveys</a>
             </div>
-        </form>
-        <a href="{% url 'survey_list' %}" class="back-link">Back to Surveys</a>
+        </div>
     </div>
 </body>
 </html>
