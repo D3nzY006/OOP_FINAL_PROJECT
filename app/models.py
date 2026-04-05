@@ -36,6 +36,7 @@ class Rating(models.Model):
     user = models.ForeignKey('CustomUser', on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
+    created_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         unique_together = ('user', 'question')
@@ -48,6 +49,7 @@ class OpenResponse(models.Model):
     user = models.ForeignKey('CustomUser', on_delete=models.CASCADE)
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name='open_responses')
     response = models.TextField(blank=True)
+    created_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         unique_together = ('user', 'survey')

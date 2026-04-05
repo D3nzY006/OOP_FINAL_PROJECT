@@ -1,3 +1,4 @@
+{% load survey_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -168,11 +169,24 @@
             transition: background 0.2s ease;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
         }
 
         .btn:hover {
             background-color: var(--primary-dark);
             transform: translateY(-2px);
+        }
+
+        .btn-completed {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .btn-completed:hover {
+            background-color: #6c757d;
+            transform: none;
         }
 
         /* No Surveys Message */
@@ -193,6 +207,78 @@
             font-size: 14px;
             color: var(--text-muted);
             margin-top: 40px;
+        }
+
+        /* Modal Popup */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .modal-content h3 {
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .modal-content p {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .modal-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .modal-btn:hover {
+            background-color: var(--primary-dark);
         }
 
         /* Mobile adjustments */
@@ -218,7 +304,7 @@
         <header>
             <h1>Welcome, {{ user.username }}!</h1>
             <div class="header-actions">
-                <a href="{% url 'logout' %}">Logout</a>
+                <a href="{% url 'login' %}">Back to Login</a>
             </div>
         </header>
 
@@ -239,7 +325,11 @@
                                 <h3>{{ survey.title }}</h3>
                                 <p>{{ survey.description|default:"No description available." }}</p>
                             </div>
-                            <a href="{% url 'survey_instructions' survey.id %}" class="btn">Start Survey</a>
+                            {% if completed_surveys and completed_surveys|get_item:survey.id %}
+                                <button class="btn btn-completed" onclick="showModal()">✓ Completed</button>
+                            {% else %}
+                                <a href="{% url 'survey_instructions' survey.id %}" class="btn">Start Survey</a>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>
@@ -255,5 +345,33 @@
             &copy; 2026 Survey System. All rights reserved.
         </footer>
     </div>
+
+    <!-- Modal Popup -->
+    <div class="modal-overlay" id="surveyModal">
+        <div class="modal-content">
+            <div class="modal-icon">⏰</div>
+            <h3>Survey Already Completed</h3>
+            <p>You can answer this survey once a month. Please try again next month.</p>
+            <button class="modal-btn" onclick="closeModal()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        function showModal() {
+            document.getElementById('surveyModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('surveyModal').classList.remove('show');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('surveyModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
 </body>
 </html>

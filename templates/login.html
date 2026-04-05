@@ -38,9 +38,12 @@
     }
 
 .hero-logo{
-  height:200px;
-  margin-left: 85px;
-  margin-bottom:25px;
+  height: 200px;
+  max-width: 100%;
+  margin-bottom: 25px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
     .logo span {
@@ -121,6 +124,18 @@
     .dropdown-menu a:hover {
       background-color: #f8fafc;
       color: #1b5e20;
+    }
+
+    .dropdown-menu a.logout-link {
+      color: #dc3545;
+      font-weight: 600;
+      border-top: 2px solid #dc3545;
+      margin-top: 5px;
+    }
+
+    .dropdown-menu a.logout-link:hover {
+      background-color: #dc3545;
+      color: white;
     }
 
 
@@ -248,8 +263,53 @@
       .container {
         flex-direction: column;
         text-align: center;
+        padding: 40px 5%;
       }
       .nav-links { display: none; }
+      .hero-logo {
+        height: 150px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .hero-text h1 {
+        font-size: 2rem;
+      }
+      .hero-text p {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 30px 4%;
+      }
+      .hero-logo {
+        height: 120px;
+      }
+      .hero-text h1 {
+        font-size: 1.75rem;
+      }
+      .hero-text p {
+        font-size: 0.95rem;
+      }
+      .login-card {
+        padding: 30px 20px;
+      }
+      .login-card h2 {
+        font-size: 24px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .hero-logo {
+        height: 100px;
+      }
+      .hero-text h1 {
+        font-size: 1.5rem;
+      }
+      .login-card {
+        padding: 25px 15px;
+      }
     }
   </style>
 </head>
@@ -263,6 +323,7 @@
         <a href="{% url 'my_account' %}">Account</a>
         <a href="{% url 'analytics_dashboard' %}">Analytics</a>
         <a href="{% url 'qr_code' %}">QR-code</a>
+        <a href="{% url 'logout' %}" class="logout-link">🚪 Logout</a>
       </div>
     </div>
   </nav>
@@ -279,11 +340,23 @@
 
     <div class="login-card">
       <h2>Login</h2>
+      {% if form.errors %}
+      <div style="background-color: #fee2e2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px; margin-bottom: 20px; color: #dc2626;">
+        <strong>Login failed:</strong>
+        <ul style="margin: 8px 0 0 20px;">
+          {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
       <form method="post">
         {% csrf_token %}
         <div class="form-group">
           <label>Username:</label>
-          <input type="text" name="username" placeholder="Username">
+          <input type="text" name="username" placeholder="Username" value="{{ form.username.value|default:'' }}">
         </div>
         <div class="form-group">
           <label>Password:</label>

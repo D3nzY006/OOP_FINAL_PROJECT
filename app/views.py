@@ -1,5 +1,6 @@
 import re
 from collections import Counter
+from datetime import timedelta
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
@@ -8,8 +9,9 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import Avg, Count, Sum
 from django.urls import reverse
+from django.utils import timezone
 from .models import Survey, Question, Rating, CustomUser, OpenResponse
-from .forms import CustomUserCreationForm, RatingForm
+from .forms import CustomUserCreationForm, RatingForm, UserAccountForm
 
 DEFAULT_SURVEY_QUESTIONS = [
     "The survey instructions were clear and easy to follow.",
@@ -131,8 +133,11 @@ def qr_code(request):
         },
     )
 
+@login_required
 def my_account(request):
     account = None
+    form = None
+    edit_mode = False
 
     if request.user.is_authenticated:
         first_name = request.user.first_name or ""
@@ -151,13 +156,87 @@ def my_account(request):
             'initials': initials,
         }
 
-    return render(request, 'my_account.html', {'account': account})
+        if request.method == 'POST':
+            form = UserAccountForm(request.POST, instance=request.user)
+            if form.is_valid():
+                form.save()
+                return redirect('my_account')
+            else:
+                edit_mode = True
+        else:
+            form = UserAccountForm(instance=request.user)
+            if request.GET.get('edit') == 'true':
+                edit_mode = True
+
+    return render(request, 'my_account.html', {'account': account, 'form': form, 'edit_mode': edit_mode})
 
 # Survey views
 @login_required
 def survey_list(request):
-    surveys = Survey.objects.all()
-    return render(request, 'survey_list.html', {'surveys': surveys})
+    user_role = get_respondent_role(request.user)
+    
+    # Filter surveys based on user role
+    if user_role == 'student':
+        surveys = Survey.objects.filter(
+            title__in=[
+                'Student Satisfaction Survey: College of Information Systems',
+                'General Feedback Survey: College of Information Systems'
+            ]
+        )
+    elif user_role == 'instructor':
+        surveys = Survey.objects.filter(
+            title__in=[
+                'Instructor Feedback Survey: Teaching Resources and Support',
+                'General Feedback Survey: College of Information Systems'
+            ]
+        )
+    elif user_role == 'staff':
+        surveys = Survey.objects.filter(
+            title__in=[
+                'Staff Experience Survey: Work Environment and Communication',
+                'General Feedback Survey: College of Information Systems'
+            ]
+        )
+    elif user_role == 'visitor':
+        surveys = Survey.objects.filter(
+            title__in=[
+                'Visitor Experience Survey: Campus Accessibility and Hospitality',
+                'General Feedback Survey: College of Information Systems'
+            ]
+        )
+    else:
+        surveys = Survey.objects.all()
+    
+    # Check which surveys have been completed in the last month
+    one_month_ago = timezone.now() - timedelta(days=30)
+    completed_surveys = {}
+    
+    # Prefetch completion data to avoid N+1 queries
+    completed_rating_survey_ids = set(
+        Rating.objects.filter(
+            user=request.user,
+            question__survey__in=surveys,
+            created_at__gte=one_month_ago
+        ).values_list('question__survey_id', flat=True).distinct()
+    )
+    completed_response_survey_ids = set(
+        OpenResponse.objects.filter(
+            user=request.user,
+            survey__in=surveys,
+            created_at__gte=one_month_ago
+        ).values_list('survey_id', flat=True).distinct()
+    )
+    
+    for survey in surveys:
+        completed_surveys[survey.id] = (
+            survey.id in completed_rating_survey_ids or
+            survey.id in completed_response_survey_ids
+        )
+    
+    return render(request, 'survey_list.html', {
+        'surveys': surveys,
+        'completed_surveys': completed_surveys
+    })
 
 
 def analytics_dashboard(request):
@@ -276,14 +355,14 @@ def take_survey(request, survey_id):
                 Rating.objects.update_or_create(
                     user=request.user,
                     question=question,
-                    defaults={'rating': int(rating_value)}
+                    defaults={'rating': int(rating_value), 'created_at': timezone.now()}
                 )
 
         open_response_text = request.POST.get('open_response', '').strip()
         OpenResponse.objects.update_or_create(
             user=request.user,
             survey=survey,
-            defaults={'response': open_response_text}
+            defaults={'response': open_response_text, 'created_at': timezone.now()}
         )
         return redirect('thank_you')
 

@@ -28,6 +28,17 @@ class CustomUserCreationForm(UserCreationForm):
 
         return user
 
+class UserAccountForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ('first_name', 'last_name', 'email')
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email Address'}),
+        }
+
+
 class RatingForm(forms.ModelForm):
     rating = forms.ChoiceField(
         choices=[(i, str(i)) for i in range(1, 6)],

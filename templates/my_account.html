@@ -4,77 +4,147 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile - Online Survey System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f4f2;
+            background-color: #f0f2f5;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
-            padding: 40px;
-            margin: 0;
+            align-items: center;
+            padding: 20px;
         }
 
         .profile-card {
             background: white;
             width: 100%;
-            max-width: 500px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            max-width: 520px;
+            min-width: 280px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
-            border: 1px solid #e1e9e3;
+            animation: slideUp 0.6s ease-out;
+            margin: 0 auto;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .profile-header {
-            background: #1b5e20;
+            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
             color: white;
             padding: 40px 30px;
             text-align: center;
             position: relative;
+            overflow: hidden;
+        }
+
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
         }
 
         .avatar {
-            width: 90px;
-            height: 90px;
-            background: white;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
             color: #1b5e20;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
+            font-size: 40px;
             font-weight: bold;
             margin: 0 auto 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            border: 4px solid rgba(255,255,255,0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-header h2 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-header .username {
+            margin: 8px 0 0;
+            opacity: 0.9;
+            font-weight: 400;
+            font-size: 15px;
+            position: relative;
+            z-index: 1;
         }
 
         .role-badge {
             display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
+            padding: 6px 18px;
+            border-radius: 25px;
             font-size: 11px;
-            font-weight: bold;
+            font-weight: 700;
             text-transform: uppercase;
-            margin-top: 12px;
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.4);
-            letter-spacing: 1px;
+            margin-top: 15px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.4);
+            letter-spacing: 1.5px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
         }
 
         .profile-body {
-            padding: 30px;
+            padding: 35px;
         }
 
         .info-group {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .info-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 16px;
-            padding: 14px 0;
-            border-bottom: 1px solid #f1f1f1;
+            gap: 20px;
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+
+        .info-row:hover {
+            background: #f8f9fa;
+            padding-left: 10px;
+            padding-right: 10px;
+            border-radius: 8px;
         }
 
         .info-row:last-child {
@@ -83,8 +153,20 @@
 
         .label {
             font-size: 13px;
-            color: #7f8c8d;
+            color: #6c757d;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .label i {
+            color: #1b5e20;
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
         }
 
         .value {
@@ -96,56 +178,429 @@
         }
 
         .password-mask {
-            letter-spacing: 3px;
-            color: #bdc3c7;
+            letter-spacing: 4px;
+            color: #adb5bd;
+            font-weight: 600;
         }
 
-        .edit-btn {
-            display: block;
+        .btn-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             margin-top: 25px;
-            background: #1b5e20;
+            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: center;
             text-decoration: none;
-            box-shadow: 0 4px 12px rgba(27, 94, 32, 0.2);
+            box-shadow: 0 6px 20px rgba(27, 94, 32, 0.3);
         }
 
-        .edit-btn:hover {
-            background: #1b5e20;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 15px rgba(27, 94, 32, 0.3);
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(27, 94, 32, 0.4);
         }
 
+        .btn-secondary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 16px;
+            margin-top: 12px;
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(108, 117, 125, 0.4);
+        }
+
+        .btn-danger {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 16px;
+            margin-top: 12px;
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.4);
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #495057;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group label i {
+            color: #1b5e20;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 15px;
+            color: #2c3e50;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1b5e20;
+            box-shadow: 0 0 0 4px rgba(27, 94, 32, 0.1);
+            background: white;
+        }
+
+        .form-group input[readonly] {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+            color: #6c757d;
+            border-color: #dee2e6;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .btn-save {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px;
+            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(27, 94, 32, 0.3);
+        }
+
+        .btn-save:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(27, 94, 32, 0.4);
+        }
+
+        .btn-cancel {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px;
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
+        }
+
+        .btn-cancel:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(108, 117, 125, 0.4);
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .error-message i {
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 1px solid #b1dfbb;
+        }
+
+        .success-message i {
+            font-size: 18px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .nav-btn-login {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        .nav-btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+        }
+
+        .nav-btn-register {
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .nav-btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: #adb5bd;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #dee2e6;
+        }
+
+        .divider span {
+            padding: 0 15px;
+        }
+
+        /* Large screens (laptops, desktops) */
+        @media (min-width: 1024px) {
+            .profile-card {
+                max-width: 580px;
+            }
+            
+            .profile-header {
+                padding: 50px 40px;
+            }
+            
+            .profile-body {
+                padding: 40px;
+            }
+            
+            .avatar {
+                width: 110px;
+                height: 110px;
+                font-size: 44px;
+            }
+        }
+
+        /* Medium screens (tablets) */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .profile-card {
+                max-width: 550px;
+            }
+            
+            .profile-header {
+                padding: 45px 35px;
+            }
+            
+            .profile-body {
+                padding: 35px;
+            }
+        }
+
+        /* Small screens (phones landscape, small tablets) */
+        @media (min-width: 561px) and (max-width: 767px) {
+            .profile-card {
+                max-width: 500px;
+            }
+            
+            body {
+                padding: 15px;
+            }
+        }
+
+        /* Extra small screens (phones portrait) */
         @media (max-width: 560px) {
             body {
-              
-                padding: 16px;
+                padding: 10px;
+            }
+
+            .profile-card {
+                max-width: 100%;
+                border-radius: 15px;
             }
 
             .profile-header {
-                padding: 28px 20px;
+                padding: 30px 20px;
             }
 
             .profile-body {
-                padding: 22px;
+                padding: 25px;
+            }
+
+            .avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 32px;
+            }
+            
+            .profile-header h2 {
+                font-size: 22px;
             }
 
             .info-row {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 6px;
+                gap: 8px;
+                padding: 14px 0;
+            }
+
+            .label {
+                font-size: 12px;
             }
 
             .value {
                 text-align: left;
+                font-size: 14px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+            
+            .btn-primary,
+            .btn-secondary,
+            .btn-danger,
+            .btn-save,
+            .btn-cancel {
+                padding: 14px;
+                font-size: 14px;
+            }
+        }
+
+        /* Very small screens */
+        @media (max-width: 360px) {
+            body {
+                padding: 8px;
+            }
+            
+            .profile-card {
+                border-radius: 12px;
+            }
+            
+            .profile-header {
+                padding: 25px 15px;
+            }
+            
+            .profile-body {
+                padding: 20px;
+            }
+            
+            .avatar {
+                width: 70px;
+                height: 70px;
+                font-size: 28px;
+            }
+            
+            .profile-header h2 {
+                font-size: 20px;
+            }
+            
+            .form-group input {
+                padding: 12px 14px;
+                font-size: 14px;
             }
         }
     </style>
@@ -156,55 +611,115 @@
     {% if account %}
     <div class="profile-header">
         <div class="avatar">{{ account.initials|default:"U" }}</div>
-        <h2 style="margin:0; font-size: 24px;">{{ account.display_name }}</h2>
-        <p style="margin:5px 0 0; opacity: 0.85; font-weight: 300;">@{{ account.username }}</p>
+        <h2>{{ account.display_name }}</h2>
+        <p class="username">@{{ account.username }}</p>
         <span class="role-badge">{{ account.role }}</span>
     </div>
 
     <div class="profile-body">
+        {% if edit_mode %}
+        <!-- Edit Mode -->
+        <form method="post">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+            <div class="error-message" style="margin-bottom: 15px; padding: 10px; background-color: #ffebee; border-radius: 8px;">
+                <i class="fas fa-exclamation-circle"></i> {{ form.non_field_errors.0 }}
+            </div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> First Name</label>
+                <input type="text" id="id_first_name" name="first_name" value="{{ form.first_name.value|default:'' }}" placeholder="Enter your first name">
+                {% if form.first_name.errors %}
+                <div class="error-message"><i class="fas fa-exclamation-circle"></i> {{ form.first_name.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Last Name</label>
+                <input type="text" id="id_last_name" name="last_name" value="{{ form.last_name.value|default:'' }}" placeholder="Enter your last name">
+                {% if form.last_name.errors %}
+                <div class="error-message"><i class="fas fa-exclamation-circle"></i> {{ form.last_name.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-at"></i> Username</label>
+                <input type="text" id="id_username" name="username" value="{{ account.username }}" readonly>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Email Address</label>
+                <input type="email" id="id_email" name="email" value="{{ form.email.value|default:'' }}" placeholder="Enter your email address">
+                {% if form.email.errors %}
+                <div class="error-message"><i class="fas fa-exclamation-circle"></i> {{ form.email.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-shield-alt"></i> System Role</label>
+                <input type="text" id="id_role" name="role" value="{{ account.role }}" readonly>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn-save"><i class="fas fa-save"></i> Save Changes</button>
+                <a class="btn-cancel" href="{% url 'my_account' %}"><i class="fas fa-times"></i> Cancel</a>
+            </div>
+        </form>
+        {% else %}
+        <!-- View Mode -->
         <div class="info-group">
             <div class="info-row">
-                <span class="label">First Name</span>
+                <span class="label"><i class="fas fa-user"></i> First Name</span>
                 <span class="value">{{ account.first_name|default:"-" }}</span>
             </div>
             <div class="info-row">
-                <span class="label">Last Name</span>
+                <span class="label"><i class="fas fa-user"></i> Last Name</span>
                 <span class="value">{{ account.last_name|default:"-" }}</span>
             </div>
             <div class="info-row">
-                <span class="label">Username</span>
+                <span class="label"><i class="fas fa-at"></i> Username</span>
                 <span class="value">{{ account.username }}</span>
             </div>
             <div class="info-row">
-                <span class="label">Email Address</span>
+                <span class="label"><i class="fas fa-envelope"></i> Email Address</span>
                 <span class="value">{{ account.email|default:"-" }}</span>
             </div>
             <div class="info-row">
-                <span class="label">Password</span>
+                <span class="label"><i class="fas fa-lock"></i> Password</span>
                 <span class="value password-mask">********</span>
             </div>
             <div class="info-row">
-                <span class="label">System Role</span>
+                <span class="label"><i class="fas fa-shield-alt"></i> System Role</span>
                 <span class="value" style="color: #1b5e20; font-weight: 700;">{{ account.role }}</span>
             </div>
         </div>
 
-        <a class="edit-btn" href="{% url 'survey_list' %}">Edit Account Settings</a>
+        <a class="btn-primary" href="{% url 'my_account' %}?edit=true"><i class="fas fa-edit"></i> Edit Account Settings</a>
+        <a class="btn-primary" href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Back to Login</a>
+        {% endif %}
     </div>
     {% else %}
     <div class="profile-header">
-        <div class="avatar">U</div>
-        <h2 style="margin:0; font-size: 24px;">My Account</h2>
-        <p style="margin:5px 0 0; opacity: 0.85; font-weight: 300;">No active user session</p>
+        <div class="avatar"><i class="fas fa-user"></i></div>
+        <h2>My Account</h2>
+        <p class="username">No active user session</p>
     </div>
     <div class="profile-body">
         <div class="info-group">
             <div class="info-row">
-                <span class="label">Info</span>
-                <span class="value">Please login or register first.</span>
+                <span class="label"><i class="fas fa-info-circle"></i> Info</span>
+                <span class="value">Please login or register to view your profile.</span>
             </div>
         </div>
-        <a class="edit-btn" href="{% url 'login' %}">Go to Login</a>
+
+        <div class="divider"><span>Get Started</span></div>
+
+        <div class="nav-buttons">
+            <a class="nav-btn nav-btn-login" href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
+            <a class="nav-btn nav-btn-register" href="{% url 'register' %}"><i class="fas fa-user-plus"></i> Register</a>
+        </div>
     </div>
     {% endif %}
 </div>
